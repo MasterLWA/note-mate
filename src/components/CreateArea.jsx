@@ -1,88 +1,52 @@
 import React, { useState } from "react";
-import AddIcon from "@material-ui/icons/Add";
-import Zoom from "@material-ui/core/Zoom";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 import Fab from "@material-ui/core/Fab";
+import Zoom from "@material-ui/core/Zoom";
 
 function CreateArea(props) {
-  const [note, setNote] = useState({
-    title: "",
-    content: ""
-  });
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  function handleChange(event) {
-    const { name, value } = event.target;
-
-    setNote((prevNote) => {
-      return {
-        ...prevNote,
-        [name]: value
-      };
+  const [newNote, setNewNote] = useState({ title: "", content: "" });
+  function getNewNotes(event) {
+    const name = event.target.name;
+    const value = event.target.value;
+    setNewNote((prev) => {
+      if (name === "title") {
+        return { title: value, content: prev.content };
+      } else if (name === "content") {
+        return { title: prev.title, content: value };
+      }
     });
   }
-
-  function showAlert() {
-    const div = document.createElement("div");
-    div.className = "alert error";
-    div.appendChild(document.createTextNode("Please add all fields."));
-    const createArea = document.querySelector(".create-area");
-    const form = document.querySelector(".create-note");
-    createArea.insertBefore(div, form);
-
-    // Timeout after 3 seconds
-    setTimeout(function () {
-      document.querySelector(".alert").remove();
-    }, 3000);
-  }
-
   function submitNote(event) {
-    // validate no empty fields
-    if (note.title === "" || note.content === "") {
-      // show alert
-      showAlert();
-    } else {
-      props.onAdd(note);
-
-      setNote({
-        title: "",
-        content: ""
-      });
-    }
-
     event.preventDefault();
+    props.onAdd(newNote);
+    setNewNote({ title: "", content: "" });
   }
-
+  const [isExpanded, setIsExpanded] = useState(false);
   function expand() {
-    // Change display to none
     setIsExpanded(true);
-    // Change rows to 3
   }
-
   return (
-    <div className="create-area">
+    <div>
       <form className="create-note">
         {isExpanded && (
           <input
-            className="title"
+            onChange={getNewNotes}
+            value={newNote.title}
             name="title"
-            onChange={handleChange}
-            value={note.title}
             placeholder="Title"
           />
         )}
-
         <textarea
-          className="textarea"
+          onChange={getNewNotes}
           name="content"
-          onChange={handleChange}
-          onClick={expand}
-          value={note.content}
           placeholder="Take a note..."
-          rows={isExpanded ? 3 : 1}
+          rows={isExpanded ? "3" : "1"}
+          onClick={expand}
+          value={newNote.content}
         />
         <Zoom in={isExpanded}>
           <Fab onClick={submitNote}>
-            <AddIcon />
+            <AddCircleIcon />
           </Fab>
         </Zoom>
       </form>

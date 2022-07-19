@@ -1,18 +1,16 @@
 import React from "react";
-import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 function Note(props) {
-  function handleClick() {
-    props.onDelete(props.id);
+  function deleteNote(){
+    props.onDelete(props.id)
   }
 
   return (
     <div className="note">
       <h1>{props.title}</h1>
       <p>{props.content}</p>
-      <button onClick={handleClick}>
-        <DeleteIcon />
-      </button>
+      <button onClick={deleteNote}><DeleteForeverIcon/></button>
     </div>
   );
 }
